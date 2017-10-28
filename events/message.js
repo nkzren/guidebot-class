@@ -17,7 +17,7 @@ module.exports = class {
     // If there is no guild, get default conf (DMs)
     const settings = message.guild ?
       this.client.settings.get(message.guild.id) :
-      this.client.config.defaultSettings;
+      this.client.settings.get("default");
 
     // For ease of use in commands and functions, we'll attach the settings
     // to the message object, so `message.settings` is accessible.
