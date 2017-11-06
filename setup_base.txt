@@ -1,11 +1,10 @@
 const config = {
-  "ownerID": "{{ownerID}}",
   "admins": [],
   "support": [],
   "token": {{token}},
   "dashboard" : {
     "oauthSecret": {{oauthSecret}},
-    "callbackURL": `http://{{fullURL}}/callback`,
+    "callbackURL": 'http://{{fullURL}}/callback',
     "sessionSecret": {{sessionSecret}},
     "domain": {{domain}},
     "port": {{port}}
@@ -51,7 +50,7 @@ const config = {
     },
     { level: 10,
       name: "Bot Owner", 
-      check: (message) => message.client.config.ownerID === message.author.id
+      check: (message) => message.client.appInfo.owner.id === message.author.id
     }
   ]
 };

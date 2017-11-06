@@ -32,11 +32,6 @@ let prompts = [
   },
   {
     type: "input",
-    name: "ownerID",
-    message: "Please enter the bot owner's User ID"
-  },
-  {
-    type: "input",
     name: "oauthSecret",
     message: "Please enter the Client Secret from the application page."
   },
@@ -88,7 +83,6 @@ let prompts = [
   const port = answers.host.split(":")[1] || "81";
 
   baseConfig = baseConfig
-    .replace("{{ownerID}}", answers.ownerID)
     .replace("{{fullURL}}", answers.host)
     .replace("{{domain}}", `"${answers.host.split(":")[0]}"`)
     .replace("{{port}}", port)
