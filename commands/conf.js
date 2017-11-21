@@ -1,5 +1,3 @@
-const { inspect } = require("util");
-
 /*
 FOR GUILD SETTINGS SEE set.js !
 This command is used to modify the bot's default configuration values, which affects all guilds. 
@@ -9,7 +7,7 @@ your bot. The `del` action removes the key also from every guild, and loses its 
 */
 const Command = require("../base/Command.js");
 
-class Set extends Command {
+class Conf extends Command {
   constructor(client) {
     super(client, {
       name: "conf",
@@ -92,9 +90,13 @@ class Set extends Command {
 
       // Display all default settings.
     } else {
-      await message.channel.send(`***__Bot Default Settings__***\n\`\`\`json\n${inspect(defaults)}\n\`\`\``);
-    }
+      const array = [];
+      Object.entries(this.client.settings.get("default")).forEach(([key, value]) => {
+        array.push(`${key}${" ".repeat(20 - key.length)}::  ${value}`); 
+      });
+      await message.channel.send(`= Bot Default Settings =
+${array.join("\n")}`, {code: "asciidoc"});    }
   }
 }
 
-module.exports = Set;
+module.exports = Conf;

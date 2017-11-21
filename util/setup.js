@@ -3,10 +3,10 @@ const Enmap = require("enmap");
 const EnmapLevel = require("enmap-level");
 const fs = require("fs");
 
-let baseConfig = fs.readFileSync("./setup_base.txt", "utf8");
+let baseConfig = fs.readFileSync("./util/setup_base.txt", "utf8");
 
 const defaultSettings = `{
-  "prefix": "~",
+  "prefix": "-",
   "modLogChannel": "mod-log",
   "modRole": "Moderator",
   "adminRole": "Administrator",

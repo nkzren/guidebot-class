@@ -8,6 +8,6 @@ module.exports = class {
   async run(guild) {
 
     this.client.user.setPresence({game: {name: `${this.client.settings.get("default").prefix}help | ${this.client.guilds.size} Servers`, type:0}});
-    this.client.log("log", `New guild has been joined: ${guild.name} (${guild.id}) with ${guild.memberCount - 1} members`, "JOINED");
+    this.client.logger.log(`New guild has been joined: ${guild.name} (${guild.id}) with ${guild.memberCount - 1} members`);
   }
 };

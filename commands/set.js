@@ -1,5 +1,3 @@
-const { inspect } = require("util");
-
 // This command is to modify/edit guild configuration. Perm Level 3 for admins
 // and owners only. Used for changing prefixes and role names and such.
 
@@ -76,8 +74,12 @@ class Set extends Command {
       
     } else {
       // Otherwise, the default action is to return the whole configuration in JSON format (to be prettified!);
-      await message.channel.send(`***__Current Guild Settings__***\n\`\`\`json\n${inspect(settings)}\n\`\`\``);
-      message.channel.send(`See the Dashboard on <${this.client.config.dashboard.callbackURL.split("/").slice(0, -1).join("/")}>`);
+      const array = [];
+      Object.entries(settings).forEach(([key, value]) => {
+        array.push(`${key}${" ".repeat(20 - key.length)}::  ${value}`); 
+      });
+      await message.channel.send(`= Current Guild Settings =
+${array.join("\n")}`, {code: "asciidoc"});
     }
   }
 }

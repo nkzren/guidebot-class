@@ -4,7 +4,7 @@ class Reboot extends Command {
   constructor(client) {
     super(client, {
       name: "reboot",
-      description: "If running under PM2, bot will restart.",
+      description: "If running under PM2, the bot will restart.",
       category: "System",
       usage: "reboot",
       aliases: []
