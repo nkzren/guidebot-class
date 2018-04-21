@@ -1,7 +1,7 @@
 // This will check if the node version you are running is the required
 // Node version, if it isn't it will throw the following error to inform
 // you.
-if (process.version.slice(1).split(".")[0] < 8) throw new Error("Node 8.0.0 or higher is required. Update Node on your system.");
+if (Number(process.version.slice(1).split(".")[0]) < 8) throw new Error("Node 8.0.0 or higher is required. Update Node on your system.");
 
 // Load up the discord.js library
 const Discord = require("discord.js");
@@ -12,6 +12,7 @@ const Enmap = require("enmap");
 const EnmapLevel = require("enmap-level");
 const klaw = require("klaw");
 const path = require("path");
+
 
 class GuideBot extends Discord.Client {
   constructor(options) {
@@ -32,7 +33,7 @@ class GuideBot extends Discord.Client {
     // and makes things extremely easy for this purpose.
     this.settings = new Enmap({ provider: new EnmapLevel({ name: "settings" }) });
 
-    // Requiring the Logger class for easy console logging
+    //requiring the Logger class for easy console logging
     this.logger = require("./util/Logger");
   }
 
@@ -48,7 +49,7 @@ class GuideBot extends Discord.Client {
   permlevel(message) {
     let permlvl = 0;
 
-    const permOrder = client.config.permLevels.slice(0).sort((p, c) => p.level < c.level ? 1 : -1);
+    const permOrder = this.config.permLevels.slice(0).sort((p, c) => p.level < c.level ? 1 : -1);
 
     while (permOrder.length) {
       const currentLevel = permOrder.shift();
@@ -71,15 +72,15 @@ class GuideBot extends Discord.Client {
 
   loadCommand(commandPath, commandName) {
     try {
-      const props = new (require(`${commandPath}${path.sep}${commandName}`))(client);
-      client.logger.log(`Loading Command: ${props.help.name}. 👌`, "log");
+      const props = new (require(`${commandPath}${path.sep}${commandName}`))(this);
+      this.logger.log(`Loading Command: ${props.help.name}. 👌`, "log");
       props.conf.location = commandPath;
       if (props.init) {
-        props.init(client);
+        props.init(this);
       }
-      client.commands.set(props.help.name, props);
+      this.commands.set(props.help.name, props);
       props.conf.aliases.forEach(alias => {
-        client.aliases.set(alias, props.help.name);
+        this.aliases.set(alias, props.help.name);
       });
       return false;
     } catch (e) {
@@ -89,15 +90,15 @@ class GuideBot extends Discord.Client {
 
   async unloadCommand(commandPath, commandName) {
     let command;
-    if (client.commands.has(commandName)) {
-      command = client.commands.get(commandName);
-    } else if (client.aliases.has(commandName)) {
-      command = client.commands.get(client.aliases.get(commandName));
+    if (this.commands.has(commandName)) {
+      command = this.commands.get(commandName);
+    } else if (this.aliases.has(commandName)) {
+      command = this.commands.get(this.aliases.get(commandName));
     }
     if (!command) return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
 
     if (command.shutdown) {
-      await command.shutdown(client);
+      await command.shutdown(this);
     }
     delete require.cache[require.resolve(`${commandPath}${path.sep}${commandName}.js`)];
     return false;
@@ -112,8 +113,8 @@ class GuideBot extends Discord.Client {
   // getSettings merges the client defaults with the guild settings. guild settings in
   // enmap should only have *unique* overrides that are different from defaults.
   getSettings(id) {
-    const defaults = client.settings.get("default");
-    let guild = client.settings.get(id);
+    const defaults = this.settings.get("default");
+    let guild = this.settings.get(id);
     if (typeof guild != "object") guild = {};
     const returnObject = {};
     Object.keys(defaults).forEach((key) => {
@@ -125,8 +126,8 @@ class GuideBot extends Discord.Client {
   // writeSettings overrides, or adds, any configuration item that is different
   // than the defaults. This ensures less storage wasted and to detect overrides.
   writeSettings(id, newSettings) {
-    const defaults = client.settings.get("default");
-    let settings = client.settings.get(id);
+    const defaults = this.settings.get("default");
+    let settings = this.settings.get(id);
     if (typeof settings != "object") settings = {};
     for (const key in newSettings) {
       if (defaults[key] !== newSettings[key]) {
@@ -135,7 +136,7 @@ class GuideBot extends Discord.Client {
         delete settings[key];
       }
     }
-    client.settings.set(id, settings);
+    this.settings.set(id, settings);
   }
 }
 
